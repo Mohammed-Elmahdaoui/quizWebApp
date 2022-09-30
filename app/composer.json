@@ -1,0 +1,14 @@
+{
+    "name": "mohammed/app",
+    "autoload": {
+        "psr-4": {
+            "app\\": "./"
+        }
+    },
+    "authors": [
+        {
+            "name": "Elmahdaoui Mohammed"
+        }
+    ],
+    "require": {}
+}
