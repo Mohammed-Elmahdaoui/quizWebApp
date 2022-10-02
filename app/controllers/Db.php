@@ -2,34 +2,30 @@
 
 namespace app\controllers;
 
-use \PDO ;
-use \PDOException ;
+use \PDO;
+use \PDOException;
 
 class Db
 {
 
-    private $host = "localhost";
-    private $user = "root";
-    private $password = "123456";
-    private $dbName = "quizapp";
+    private $host;
+    private $user;
+    private $password;
+    private $dbName;
 
-    public $pdo;
+    private $pdo;
 
     // constructeur
-    public function __construct()
+    public function __construct(
+        $host = "localhost", 
+        $user = "root", 
+        $password = "123456", 
+        $dbName = "quizapp")
     {
-        $dsn = "mysql:host=$this->host;dbname=$this->dbName";
-        try {
-            $this->pdo = new PDO(
-                $dsn,
-                $this->user,
-                $this->password
-            );
-            $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $this->pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
-        } catch (PDOException $e) {
-            die($e->getMessage());
-        }
+        $this->host = $host;
+        $this->user = $user;
+        $this->password = $password;
+        $this->dbName = $dbName;
 
     }
 
@@ -41,26 +37,56 @@ class Db
         }
     }
 
+    private function getPDO()
+    {
+        if ($this->pdo == null) {
+            $dsn = "mysql:host=$this->host;dbname=$this->dbName";
+            try {
+                $this->pdo = new PDO(
+                    $dsn,
+                    $this->user,
+                    $this->password
+                );
+                $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                $this->pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_CLASS);
+            } catch (PDOException $e) {
+                die($e->getMessage());
+            }
+        }
+        return $this->pdo;
+    }
 
     /**
      * @param tableName
      * @return table[objet]
      */
-    public function query($tableName)
-    {
-        $stm = $this->pdo->prepare("SELECT * FROM ?;");
-        $stm->execute([$tableName]);
-        return $stm->fetchAll();
-    }
+    // public function query($statement, $className)
+    // {
+    //     $stm = $this->pdo->prepare("SELECT * FROM ?;");
+    //     $stm->execute([$className]);
+    //     return $stm->fetchAll($className);
+    // }
 
-    public function prepare($statement, $parameters, $mode=false)
+    public function query(string $statement, array $parameters, $className, $mode=false)
     {
-        $stm = $this->pdo->prepare($statement);
+        echo "<pre>";
+        var_dump($statement);
+        echo "</pre>";
+        echo "<pre>";
+        var_dump($parameters);
+        echo "</pre>";
+        echo "<pre>";
+        var_dump($className);
+        echo "</pre>";
+
+        $stm = $this->getPDO()->prepare($statement);
+        echo "test";
         $stm->execute($parameters);
-        if($mode){
-            return $stm->fetch();
-        }else{
-            return $stm->fetchAll();
+        echo "testttt";
+        if ($mode) {
+            return $stm->fetchObject($className);
+        } else {
+            return $stm->fetchAll($className);
         }
     }
 
@@ -68,7 +94,7 @@ class Db
 
 
 
-    
+
 
     public function queryAllModule($codeFiliere)
     {
@@ -90,14 +116,4 @@ class Db
         $stm->execute([$codeModule]);
         return $stm->fetchAll();
     }
-
-
-
-
-
-
-
-
-
-
 }

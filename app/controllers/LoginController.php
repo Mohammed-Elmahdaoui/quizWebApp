@@ -2,31 +2,22 @@
 
 namespace app\controllers;
 
-use app\modules;
+use app\modules\Formateur;
+use app\modules\Stagiaire;
 
 class LoginController
 {
 
-    private Db $pdo;
-
-    public function __construct()
-    {
-        $this->pdo = new Db();
-    }
     
-    // public function store(string $email, string $password, string $type, Db $db)
-    public function stor(string $email, string $password, string $type)
+    // public function login
+    public static function login(string $username, string $password, string $type)
     {
-        $userObj = null;
         if ($type == "formateur") {
-            $userObj = modules\Formateur::login($this->pdo->connect(), $email, $password);
-        } else {
+            $user = Formateur::login($username, $password, $type);
 
-            $userObj = modules\Stagiaire::login($this->pdo->connect(), $email, $password);
+        } elseif($type == "stagiaire") {
+            $user = Stagiaire::login($username, $password, $type);
         }
-        // header("location:MenuPrincipale.php");
-        //print_r("Welcome Formateur ,".$userObj->getNom());
-        $_SESSION['user'] = serialize($userObj);
-        header("location:../menu");
+        return $user;
     }
 }

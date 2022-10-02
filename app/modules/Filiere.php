@@ -2,6 +2,8 @@
 
 namespace app\modules;
 
+use app\controllers\Db;
+
 
 class Filiere
 {
@@ -19,5 +21,20 @@ class Filiere
     {
         // ...
     }
+
+    public function getModules()
+    {
+        $db = new Db();
+
+        $stm = "SELECT * from filiere fl 
+                where fl.id in ( 
+                    SELECT ff.idFiliere 
+                    FROM formateur_filiere ff 
+                    WHERE ff.idFormateur = ?
+                )";
+        return $db->query($stm, [$this->idFormateur], 'app\modules\Filiere');
+    }
+
+
 
 }

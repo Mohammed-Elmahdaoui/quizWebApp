@@ -2,6 +2,8 @@
 
 namespace app\modules;
 
+use app\controllers\Db;
+
 
 class Module
 {
@@ -20,4 +22,16 @@ class Module
         // ...
     }
 
+
+    /**
+     * Default constructor
+     */
+    public static function getCompetences($idModule)
+    {
+        $db = new Db();
+
+        $stm = "SELECT * FROM `competence` WHERE `idModule` = ? ";
+
+        return $db->query($stm, [$idModule], 'app\modules\Competence');
+    }
 }

@@ -2,8 +2,9 @@
 
 namespace app\modules;
 
+use app\controllers\Db;
 
-class Formateur
+class Formateur extends User
 {
 
     /** @var int */
@@ -32,17 +33,25 @@ class Formateur
     /**
      * 
      */
-    public static function login($username, $password)
-    {
-        // TODO implement here
-    }
+    // public static function login($username, $password)
+    // {
+    //     // TODO implement here
+    // }
 
     /**
      * 
      */
     public function getFilieres()
     {
-        // TODO implement here
+        $db = new Db();
+
+        $stm = "SELECT * from filiere fl 
+                where fl.id in ( 
+                    SELECT ff.idFiliere 
+                    FROM formateur_filiere ff 
+                    WHERE ff.idFormateur = ?
+                )";
+        return $db->query($stm, [$this->idFormateur], 'app\modules\Filiere');
     }
     
     /**
@@ -56,7 +65,7 @@ class Formateur
     /**
      * 
      */
-    public function modifuerExamen()
+    public function modifierExamen()
     {
         // TODO implement here
     }
@@ -78,4 +87,12 @@ class Formateur
     }
 
 
+
+    /**
+     * Get the value of idFormateur
+     */ 
+    public function getId()
+    {
+        return $this->idFormateur;
+    }
 }

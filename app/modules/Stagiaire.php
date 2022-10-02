@@ -2,7 +2,7 @@
 
 namespace app\modules;
 
-class Stagiaire
+class Stagiaire extends User
 {
 
     /** @var int */
@@ -35,10 +35,10 @@ class Stagiaire
     /**
      * 
      */
-    public function login()
-    {
-        // TODO implement here
-    }
+    // public function login()
+    // {
+    //     // TODO implement here
+    // }
 
     /**
      * 
@@ -56,4 +56,12 @@ class Stagiaire
         // TODO implement here
     }
 
+
+    /**
+     * Get the value of idStagiaire
+     */ 
+    public function getId()
+    {
+        return $this->idStagiaire;
+    }
 }
